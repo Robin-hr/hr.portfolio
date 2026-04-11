@@ -1214,6 +1214,7 @@
         display: flex;
         z-index: 101;
         position: relative;
+        padding: 5px;
       }
 
       /* Hamburger animation */
@@ -1221,15 +1222,58 @@
       .nav-open .hamburger span:nth-child(2) { opacity: 0; }
       .nav-open .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+      #home {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 7rem;
+        gap: 2.5rem;
+      }
+
+      .hero-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        order: 2;
+      }
+
+      .hero-right {
+        order: 1;
+        margin-bottom: 1rem;
+      }
+
+      .hero-desc {
+        margin: 0 auto 2rem;
+        max-width: 90%;
+      }
+
       .profile-wrap {
         width: 200px;
         height: 200px;
-        margin-bottom: 1.5rem;
+        margin: 0 auto 1.5rem;
       }
 
       .profile-pic {
         width: 180px;
         height: 180px;
+      }
+
+      .btn-group {
+        flex-direction: column;
+        width: 100%;
+        max-width: 320px;
+        gap: 12px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .btn-primary, .btn-outline {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .socials {
+        justify-content: center;
+        margin-top: 0.5rem;
       }
 
       .cert-card {
@@ -1268,61 +1312,40 @@
 
       h1.name {
         font-size: 2.2rem;
+        margin-bottom: 0.8rem;
       }
 
       .role {
         font-size: 0.85rem;
-        margin-bottom: 1rem;
+        margin-bottom: 1.2rem;
       }
 
       .hero-desc {
         font-size: 0.85rem;
         line-height: 1.6;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      #home {
+        padding-top: 6rem;
       }
 
       .profile-wrap {
-        width: 160px;
-        height: 160px;
+        width: 180px;
+        height: 180px;
       }
 
       .profile-pic {
-        width: 150px;
-        height: 150px;
+        width: 165px;
+        height: 165px;
       }
 
-      .btn-primary,
-      .btn-outline {
-        width: 100%;
-        justify-content: center;
-        padding: 10px 20px;
-        font-size: 0.85rem;
+      .btn-group {
+        max-width: 100%;
       }
 
-      .socials {
-        justify-content: center;
-        margin-top: 1rem;
-      }
-      
-      .section-title {
-        font-size: 1.8rem;
-      }
-
-      .about-text p {
-        font-size: 0.85rem;
-        text-align: center;
-      }
-      
-      #home {
-        gap: 1rem;
-        padding-top: 7rem;
-      }
-      
       footer {
-        flex-direction: column;
-        text-align: center;
-        gap: 0.5rem;
-        padding: 2rem 5%;
+        padding: 2.5rem 5%;
       }
     }
 

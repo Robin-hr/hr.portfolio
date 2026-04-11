@@ -1159,7 +1159,7 @@
     /* RESPONSIVE */
     @media (max-width: 992px) {
       #home {
-        flex-direction: column-reverse;
+        flex-direction: column;
         text-align: center;
         padding-top: 8rem;
         gap: 2rem;
@@ -1169,6 +1169,12 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        order: 2;
+      }
+
+      .hero-right {
+        order: 1;
+        margin-bottom: 1rem;
       }
 
       .hero-desc {
@@ -1223,27 +1229,8 @@
       .nav-open .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
       #home {
-        flex-direction: column;
-        text-align: center;
         padding-top: 7rem;
         gap: 2.5rem;
-      }
-
-      .hero-left {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        order: 2;
-      }
-
-      .hero-right {
-        order: 1;
-        margin-bottom: 1rem;
-      }
-
-      .hero-desc {
-        margin: 0 auto 2rem;
-        max-width: 90%;
       }
 
       .profile-wrap {
@@ -1346,6 +1333,39 @@
 
       footer {
         padding: 2.5rem 5%;
+      .btn-primary,
+      .btn-outline {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 20px;
+        font-size: 0.85rem;
+      }
+
+      .socials {
+        justify-content: center;
+        margin-top: 1rem;
+      }
+      
+      .section-title {
+        font-size: 1.8rem;
+      }
+
+      .about-text p {
+        font-size: 0.85rem;
+        text-align: center;
+      }
+      
+      #home {
+        gap: 1rem;
+        padding-top: 7rem;
+      }
+      
+      footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+        padding: 2rem 5%;
+>>>>>>> bd6fabc523f260a97c98765e274f8ff20585ce0e
       }
     }
 

@@ -2646,38 +2646,10 @@
     const chatMessages = document.getElementById('chat-messages');
     const typingIndicator = document.getElementById('typing-indicator');
 
-    // API endpoint (backend handles the API key from GitHub Secrets)
+    // API endpoint (the server reads API_KEY from its private runtime environment)
     const CHAT_API_ENDPOINT = '/api/chat';
-    const MODEL_ID = 'llama-3.1-8b-instant';
 
-    let chatHistory = [
-      {
-        role: 'system', content: `You are HR AI, a professional and friendly assistant for Hebrus Robin (HR), a DevOps Engineer. 
-    You help visitors learn about Robin's skills, experience, and projects.
-    Robin is an AWS Certified Solutions Architect Associate (SAA-C03).
-    Technical Skills: 
-    - Cloud Platforms: IAM, EC2, S3, VPC, RDS, Lambda, ECR, ECS, EFS, CloudWatch, ALB, NLB, Amplify, KMS, EMR, Network Firewall, Secrets Manager, Cognito, CodeDeploy, CloudFront, WAF.
-    - CI/CD & DevOps: GitLab CI/CD, GitHub Actions, Jenkins, AWS CodePipeline.
-    - Infrastructure as Code: Terraform, CloudFormation, Ansible.
-    - Containerization: Docker, Kubernetes, Amazon EKS, Helm.
-    - Monitoring: Prometheus, Grafana, Thanos, AWS CloudWatch.
-    - Scripting: Linux, Bash, Python, Groovy, YAML.
-
-    Experience:
-    - AWS DevOps Engineer at Sensetronix Software Services (Jul 2025 - Present): Terraform-based AWS infrastructure, production server maintenance, Mailu on Ubuntu with Docker Compose and Nginx, Pipeline Genie, Jenkins and GitHub Actions with SonarQube, Trivy, and Gitleaks.
-    - DevOps Engineer, Independent Consulting (Feb 2025 - Jul 2025): GitHub Actions pipeline recovery, vulnerability remediation for 200+ alerts, and Amazon EKS operations with 99.9% availability.
-    - Relationship Manager at DCB Bank (Jul 2024 - Dec 2024): Loan servicing and legal and credit team coordination.
-
-    Key Projects:
-    - Secure Web App on AWS: Multi-AZ, Auto-scaling, ALB, RDS, S3, CloudFront, WAF.
-    - Terraform Cloud Infrastructure: Modular IaC, reduced provisioning time by 70%.
-    - Web Gallery: S3 hosting with CloudFront & GitHub Actions.
-
-    Location: Chennai, India.
-    Contact: Email: hebrusrr@gmail.com, Phone: +91 9094120699.
-    
-    Tone: Professional, technical, helpful, and concise. Never roleplay as anyone other than HR's assistant. If you don't know something, suggest contacting Robin directly.` }
-    ];
+    let chatHistory = [];
 
     chatToggle.addEventListener('click', () => {
       chatWindow.classList.toggle('open');
@@ -2707,7 +2679,6 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            model: MODEL_ID,
             messages: chatHistory
           })
         });
@@ -2719,7 +2690,7 @@
           addMessage('bot', aiMsg);
           chatHistory.push({ role: 'assistant', content: aiMsg });
         } else {
-          const errorMsg = data.error?.message || "I'm having a hard time thinking. Please try again!";
+          const errorMsg = (typeof data.error === 'string' ? data.error : data.error?.message) || "I'm having a hard time thinking. Please try again!";
           addMessage('bot', "AI Error: " + errorMsg);
           console.error("Full API Error:", data);
         }
@@ -2748,4 +2719,5 @@
 </body>
 
 </html>
+
 

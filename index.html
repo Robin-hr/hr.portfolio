@@ -492,43 +492,129 @@
 
     .skills-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: minmax(0, 900px);
+      justify-content: center;
+      gap: 0.55rem;
     }
 
     .skill-card {
-      background: var(--card);
+      overflow: hidden;
+      min-height: 0;
+      background: linear-gradient(120deg, rgba(0, 229, 255, 0.08), transparent 58%), var(--card);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.5rem;
-      transition: all 0.3s;
+      border-radius: 14px;
+      padding: 0;
+      translate: 0 var(--parallax-y, 0px);
+      transition: border-color 0.3s, box-shadow 0.3s;
+      will-change: translate, height;
     }
 
-    .skill-card:hover {
+    .skill-card:hover,
+    .skill-card.is-active {
       border-color: var(--cyan);
-      box-shadow: 0 0 24px var(--cyan-dim);
+      box-shadow: 0 0 28px var(--cyan-dim);
     }
 
     .skill-card-title {
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: space-between;
+      width: 100%;
+      min-height: 70px;
+      gap: 1rem;
+      padding: 0.9rem 1.25rem;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      color: var(--cyan);
       font-size: 1rem;
       font-weight: 700;
-      margin-bottom: 1rem;
-      color: var(--cyan);
       font-family: 'Space Mono', monospace;
+    }
+
+    .skill-card-title:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: -4px;
+      border-radius: 14px;
     }
 
     .skill-card-title::before {
       content: '●';
+      margin-right: 8px;
       font-size: 0.6rem;
+    }
+
+    .skill-card-title::after {
+      content: '+';
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: 0 0 26px;
+      margin-left: auto;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      font-size: 1.1rem;
+      line-height: 1;
+      transition: transform 300ms ease, background 300ms ease;
+    }
+
+    .skill-card.is-active .skill-card-title::after {
+      transform: rotate(45deg);
+      background: var(--cyan-dim);
+    }
+
+    .skill-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows 420ms cubic-bezier(0.2, 0.75, 0.25, 1), opacity 250ms ease;
+    }
+
+    .skill-card.is-active .skill-panel {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+
+    .skill-panel-inner {
+      overflow: hidden;
+      min-height: 0;
+      padding: 0 1.25rem 0;
+      transition: padding 420ms ease;
+    }
+
+    .skill-card.is-active .skill-panel-inner {
+      padding-top: 0.35rem;
+      padding-bottom: 1.25rem;
     }
 
     .tags {
       display: flex;
       flex-wrap: wrap;
+      align-content: flex-start;
       gap: 8px;
+    }
+
+    .skill-attribution {
+      margin: 1rem auto 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .skill-attribution a {
+      color: var(--muted);
+      text-decoration-color: var(--cyan);
+      text-underline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .skill-panel,
+      .skill-panel-inner,
+      .skill-card-title::after {
+        transition: none;
+      }
     }
 
     .tag {
@@ -1370,6 +1456,34 @@
       }
     }
 
+    /* Scroll driven 3D reveals */
+    .motion-ready .scroll-3d {
+      opacity: 0;
+      transform: perspective(1100px) translate3d(0, 42px, -36px) rotateX(5deg) scale(0.975);
+      transform-origin: center top;
+      transition: opacity 850ms ease, transform 950ms cubic-bezier(0.2, 0.75, 0.25, 1);
+      will-change: opacity, transform;
+    }
+
+    .motion-ready .scroll-3d.is-visible {
+      opacity: 1;
+      transform: perspective(1100px) translate3d(0, 0, 0) rotateX(0) scale(1);
+    }
+
+    .motion-ready .scroll-3d.scroll-card {
+      transition-duration: 700ms, 800ms;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .motion-ready .scroll-3d,
+      .motion-ready .scroll-3d.is-visible {
+        opacity: 1;
+        transform: none;
+        transition: none;
+        will-change: auto;
+      }
+    }
+
     /* ── CHATBOT ────────────────────────────────────────── */
     #chatbot-toggle {
       position: fixed;
@@ -1750,55 +1864,48 @@
   <section id="skills">
     <h2 class="section-title">Technical <span class="cyan">Skills</span></h2>
     <div class="section-underline"></div>
-    <p class="section-subtitle">Technologies and tools I work with</p>
+    <p class="section-subtitle">Select or hover over a category to explore the tools</p>
     <div class="skills-grid">
-      <div class="skill-card">
-        <div class="skill-card-title">Cloud Platforms</div>
-        <div class="tags">
-          <span class="tag">IAM</span><span class="tag">EC2</span><span class="tag">S3</span><span
-            class="tag">VPC</span><span class="tag">RDS</span><span class="tag">Lambda</span><span
-            class="tag">ECR</span><span class="tag">ECS</span><span class="tag">EFS</span><span
-            class="tag">CloudWatch</span><span class="tag">ALB</span><span class="tag">NLB</span><span
-            class="tag">Amplify</span><span class="tag">KMS</span><span class="tag">EMR</span><span class="tag">Network
-            Firewall</span><span class="tag">Secrets Manager</span><span class="tag">Cognito</span><span
-            class="tag">CodeDeploy</span><span class="tag">CloudFront</span><span class="tag">WAF</span>
+      <article class="skill-card is-active">
+        <button class="skill-card-title" id="skill-title-cloud" type="button" aria-expanded="true" aria-controls="skill-panel-cloud">Cloud Platforms</button>
+        <div class="skill-panel" id="skill-panel-cloud" role="region" aria-labelledby="skill-title-cloud">
+          <div class="skill-panel-inner"><div class="tags">
+            <span class="tag">IAM</span><span class="tag">EC2</span><span class="tag">S3</span><span class="tag">VPC</span><span class="tag">RDS</span><span class="tag">Lambda</span><span class="tag">ECR</span><span class="tag">ECS</span><span class="tag">EFS</span><span class="tag">CloudWatch</span><span class="tag">ALB</span><span class="tag">NLB</span><span class="tag">Amplify</span><span class="tag">KMS</span><span class="tag">EMR</span><span class="tag">Network Firewall</span><span class="tag">Secrets Manager</span><span class="tag">Cognito</span><span class="tag">CodeDeploy</span><span class="tag">CloudFront</span><span class="tag">WAF</span>
+          </div></div>
         </div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-card-title">CI/CD & DevOps Tools</div>
-        <div class="tags">
-          <span class="tag">GitLab CI/CD</span><span class="tag">GitHub Actions</span><span
-            class="tag">Jenkins</span><span class="tag">AWS CodePipeline</span>
+      </article>
+      <article class="skill-card">
+        <button class="skill-card-title" id="skill-title-cicd" type="button" aria-expanded="false" aria-controls="skill-panel-cicd">CI/CD & DevOps Tools</button>
+        <div class="skill-panel" id="skill-panel-cicd" role="region" aria-labelledby="skill-title-cicd" inert>
+          <div class="skill-panel-inner"><div class="tags"><span class="tag">GitLab CI/CD</span><span class="tag">GitHub Actions</span><span class="tag">Jenkins</span><span class="tag">AWS CodePipeline</span></div></div>
         </div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-card-title">Infrastructure as Code</div>
-        <div class="tags">
-          <span class="tag">Terraform</span><span class="tag">CloudFormation</span><span class="tag">Ansible</span>
+      </article>
+      <article class="skill-card">
+        <button class="skill-card-title" id="skill-title-iac" type="button" aria-expanded="false" aria-controls="skill-panel-iac">Infrastructure as Code</button>
+        <div class="skill-panel" id="skill-panel-iac" role="region" aria-labelledby="skill-title-iac" inert>
+          <div class="skill-panel-inner"><div class="tags"><span class="tag">Terraform</span><span class="tag">CloudFormation</span><span class="tag">Ansible</span></div></div>
         </div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-card-title">Containerization & Orchestration</div>
-        <div class="tags">
-          <span class="tag">Docker</span><span class="tag">Kubernetes</span><span class="tag">Amazon EKS</span><span
-            class="tag">Helm</span>
+      </article>
+      <article class="skill-card">
+        <button class="skill-card-title" id="skill-title-containers" type="button" aria-expanded="false" aria-controls="skill-panel-containers">Containerization & Orchestration</button>
+        <div class="skill-panel" id="skill-panel-containers" role="region" aria-labelledby="skill-title-containers" inert>
+          <div class="skill-panel-inner"><div class="tags"><span class="tag">Docker</span><span class="tag">Kubernetes</span><span class="tag">Amazon EKS</span><span class="tag">Helm</span></div></div>
         </div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-card-title">Monitoring & Observability</div>
-        <div class="tags">
-          <span class="tag">Prometheus</span><span class="tag">Grafana</span><span class="tag">Thanos</span><span
-            class="tag">AWS CloudWatch</span>
+      </article>
+      <article class="skill-card">
+        <button class="skill-card-title" id="skill-title-monitoring" type="button" aria-expanded="false" aria-controls="skill-panel-monitoring">Monitoring & Observability</button>
+        <div class="skill-panel" id="skill-panel-monitoring" role="region" aria-labelledby="skill-title-monitoring" inert>
+          <div class="skill-panel-inner"><div class="tags"><span class="tag">Prometheus</span><span class="tag">Grafana</span><span class="tag">Thanos</span><span class="tag">AWS CloudWatch</span></div></div>
         </div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-card-title">Scripting & Programming</div>
-        <div class="tags">
-          <span class="tag">Linux</span><span class="tag">Bash</span><span class="tag">Python</span><span
-            class="tag">Groovy</span><span class="tag">YAML</span>
+      </article>
+      <article class="skill-card">
+        <button class="skill-card-title" id="skill-title-scripting" type="button" aria-expanded="false" aria-controls="skill-panel-scripting">Scripting & Programming</button>
+        <div class="skill-panel" id="skill-panel-scripting" role="region" aria-labelledby="skill-title-scripting" inert>
+          <div class="skill-panel-inner"><div class="tags"><span class="tag">Linux</span><span class="tag">Bash</span><span class="tag">Python</span><span class="tag">Groovy</span><span class="tag">YAML</span></div></div>
         </div>
-      </div>
+      </article>
     </div>
+    <p class="skill-attribution">Expanding interaction adapted from <a href="https://skiper-ui.com/" target="_blank" rel="noopener noreferrer">Skiper UI</a>.</p>
   </section>
 
   <!-- EXPERIENCE -->
@@ -1808,123 +1915,53 @@
     <div class="exp-card">
       <div class="exp-header">
         <div>
-          <div class="exp-role">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-              stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            AWS DevOps Engineer
-            <span class="badge">Current</span>
-          </div>
-          <div class="exp-company">Freelancer</div>
+          <div class="exp-role">AWS DevOps Engineer <span class="badge">Current</span></div>
+          <div class="exp-company">Sensetronix Software Services</div>
         </div>
         <div class="exp-meta">
-          <span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-              stroke-width="2">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-              <line x1="16" y1="2" x2="16" y2="6" />
-              <line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" />
-            </svg>
-            Dec 2024 - Present
-          </span>
-          <span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-              stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Remote
-          </span>
+          <span>Jul 2025 - Present</span>
+          <span>Chennai, India</span>
         </div>
       </div>
       <ul class="exp-bullets">
-        <li><span class="check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg></span>Designed and provisioned scalable AWS infrastructure using Terraform and CloudFormation,
-          reducing manual provisioning effort by 70%.</li>
-        <li><span class="check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg></span>Built and managed Amazon EKS clusters, deploying containerized applications using Helm with
-          Ingress, Autoscaling, and persistent storage.</li>
-        <li><span class="check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg></span>Implemented monitoring solutions using Prometheus, Grafana, and Thanos (S3 integration) to
-          enhance system reliability.</li>
-        <li><span class="check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg></span>Automated infrastructure workflows using Python, Bash, AWS Lambda, and SSM Automation.</li>
-        <li><span class="check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg></span>Enforced governance using AWS Config rules with automated remediation to strengthen security
-          posture.</li>
+        <li><span class="check">✓</span>Designed and provisioned scalable AWS infrastructure with Terraform, supporting repeatable deployments and reducing configuration drift.</li>
+        <li><span class="check">✓</span>Built core infrastructure for EC2, VPC, security groups, and S3, and maintained the production server for performance and reliability.</li>
+        <li><span class="check">✓</span>Set up a self-hosted Mailu mail server on Ubuntu EC2 with Docker Compose, Nginx reverse proxy, DNS and SMTP records, and SSL certificates.</li>
+        <li><span class="check">✓</span>Proposed and owned the pipeline-generation logic and deployment strategy for Pipeline Genie, an AI-powered CI/CD pipeline and Dockerfile generator; deployed it to production on AWS.</li>
+        <li><span class="check">✓</span>Built and maintained Jenkins and GitHub Actions pipelines with SonarQube, Trivy, and Gitleaks security checks.</li>
+        <li><span class="check">✓</span>Diagnosed recurring GitHub Actions issues to improve build reliability and reduce failed deployments.</li>
       </ul>
     </div>
     <div class="exp-card">
       <div class="exp-header">
         <div>
-          <div class="exp-role">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-              stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            Relationship Manager
-          </div>
+          <div class="exp-role">DevOps Engineer</div>
+          <div class="exp-company">Independent Consulting (Freelance)</div>
+        </div>
+        <div class="exp-meta"><span>Feb 2025 - Jul 2025</span></div>
+      </div>
+      <ul class="exp-bullets">
+        <li><span class="check">✓</span>Rebuilt a broken GitHub Actions pipeline by correcting job sequencing, restructuring workflow stages, and adding validation gates, restoring fully automated deployments.</li>
+        <li><span class="check">✓</span>Created a tiered vulnerability-remediation workflow for 200+ security alerts using Snyk AI, GitHub Copilot, and Kubernetes automated rollback, reducing remediation time from hours to minutes.</li>
+        <li><span class="check">✓</span>Built and managed Amazon EKS clusters with Helm, Ingress, HPA, and persistent storage, achieving 99.9% availability.</li>
+      </ul>
+    </div>
+    <div class="exp-card">
+      <div class="exp-header">
+        <div>
+          <div class="exp-role">Relationship Manager</div>
           <div class="exp-company">DCB Bank</div>
         </div>
         <div class="exp-meta">
-          <span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-              stroke-width="2">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-              <line x1="16" y1="2" x2="16" y2="6" />
-              <line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" />
-            </svg>
-            July 2024 - Dec 2024
-          </span>
-          <span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-              stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Chennai, India
-          </span>
+          <span>Jul 2024 - Dec 2024</span>
+          <span>Chennai, India</span>
         </div>
       </div>
       <ul class="exp-bullets">
-        <li><span class="check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg></span>Managed end-to-end loan servicing and loan processing operations, ensuring timely disbursement
-          and compliance with banking policies.</li>
-        <li><span class="check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg></span>Handled customer relationship management, resolving client queries and maintaining strong
-          long-term client relationships.</li>
-        <li><span class="check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg></span>Prepared and verified legal documentation for mortgage properties under applicable legal and
-          regulatory frameworks.</li>
-        <li><span class="check"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg></span>Coordinated with legal and credit teams to ensure accurate documentation and risk assessment.
-        </li>
+        <li><span class="check">✓</span>Managed end-to-end loan servicing operations, ensuring timely disbursement and compliance with banking policies.</li>
+        <li><span class="check">✓</span>Coordinated legal and credit reviews to reduce documentation errors and strengthen risk assessment accuracy.</li>
       </ul>
+      <p style="margin-top:1rem;color:var(--muted);font-size:0.85rem;line-height:1.7">During this period, pursued the AWS SAA-C03 certification and built hands-on DevOps skills through infrastructure projects and work with Terraform, Docker, and CI/CD pipelines.</p>
     </div>
   </section>
 
@@ -2255,6 +2292,74 @@
       });
     });
 
+    // Reveal each page section and its cards with a gentle 3D perspective.
+    // Keep all content visible when the visitor requests reduced motion.
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion && 'IntersectionObserver' in window) {
+      const revealTargets = [
+        ...document.querySelectorAll('section[id]'),
+        ...document.querySelectorAll('.about-card, .skill-card, .exp-card, .cert-card, .project-card, .contact-card')
+      ];
+      revealTargets.forEach((target, index) => {
+        target.classList.add('scroll-3d');
+        if (!target.matches('section[id]')) {
+          target.classList.add('scroll-card');
+          target.style.transitionDelay = `${(index % 4) * 90}ms`;
+        }
+      });
+
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -45px 0px' });
+
+      revealTargets.forEach(target => revealObserver.observe(target));
+      document.documentElement.classList.add('motion-ready');
+    }
+
+    // Expand one skill category at a time, matching the supplied hover-expand interaction.
+    const skillCards = [...document.querySelectorAll('#skills .skill-card')];
+    const activateSkillCard = selectedCard => {
+      skillCards.forEach(card => {
+        const active = card === selectedCard;
+        card.classList.toggle('is-active', active);
+        const button = card.querySelector('.skill-card-title');
+        const panel = card.querySelector('.skill-panel');
+        button.setAttribute('aria-expanded', String(active));
+        if (active) panel.removeAttribute('inert');
+        else panel.setAttribute('inert', '');
+      });
+    };
+    skillCards.forEach(card => {
+      card.addEventListener('pointerenter', () => activateSkillCard(card));
+      card.querySelector('.skill-card-title').addEventListener('click', () => activateSkillCard(card));
+    });
+
+    // A small scroll-linked offset gives the skills grid a layered parallax feel.
+    if (!reduceMotion) {
+      let parallaxFrame = 0;
+      const updateSkillsParallax = () => {
+        parallaxFrame = 0;
+        const viewportCenter = window.innerHeight / 2;
+        skillCards.forEach(card => {
+          const rect = card.getBoundingClientRect();
+          const offset = (viewportCenter - (rect.top + rect.height / 2)) * 0.025;
+          const shift = Math.max(-12, Math.min(12, offset));
+          card.style.setProperty('--parallax-y', `${shift.toFixed(1)}px`);
+        });
+      };
+      const requestSkillsParallax = () => {
+        if (!parallaxFrame) parallaxFrame = requestAnimationFrame(updateSkillsParallax);
+      };
+      window.addEventListener('scroll', requestSkillsParallax, { passive: true });
+      window.addEventListener('resize', requestSkillsParallax);
+      requestSkillsParallax();
+    }
+
     // ═══════════════════════════════════════════════════════════
     //  CONTACT FORM — Web3Forms integration + validation
     // ═══════════════════════════════════════════════════════════
@@ -2559,8 +2664,9 @@
     - Scripting: Linux, Bash, Python, Groovy, YAML.
 
     Experience:
-    - AWS DevOps Engineer (Freelance, Dec 2024 - Present): Infrastructure automation (Terraform), Kubernetes management (EKS/Helm), Monitoring setup (Prometheus/Grafana), AWS Lambda automation, Security governance (AWS Config).
-    - Relationship Manager at DCB Bank (July 2024 - Dec 2024): Loan operations, documentation, customer relations.
+    - AWS DevOps Engineer at Sensetronix Software Services (Jul 2025 - Present): Terraform-based AWS infrastructure, production server maintenance, Mailu on Ubuntu with Docker Compose and Nginx, Pipeline Genie, Jenkins and GitHub Actions with SonarQube, Trivy, and Gitleaks.
+    - DevOps Engineer, Independent Consulting (Feb 2025 - Jul 2025): GitHub Actions pipeline recovery, vulnerability remediation for 200+ alerts, and Amazon EKS operations with 99.9% availability.
+    - Relationship Manager at DCB Bank (Jul 2024 - Dec 2024): Loan servicing and legal and credit team coordination.
 
     Key Projects:
     - Secure Web App on AWS: Multi-AZ, Auto-scaling, ALB, RDS, S3, CloudFront, WAF.
@@ -2642,3 +2748,4 @@
 </body>
 
 </html>
+
